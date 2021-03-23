@@ -1,0 +1,461 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: nd
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.2.5
+  creationTimestamp: null
+  name: nodedeployments.edge.harmonycloud.cn
+spec:
+  preserveUnknownFields: false
+  conversion:
+    strategy: Webhook
+    webhookClientConfig:
+      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJd01EY3lNREEzTURjeE5Gb1hEVE13TURjeE9EQTNNRGN4TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBUGd1ClhFQU5GYjBSenJLNTE0QTZNb2ZJa0wyOGZ0Mi9xSzdSc2ZRdXRhclgrMzhkNmV1a2VzY0Nzc29RWEhNN1BrYWYKR2x2M01jMVVRZ3ArWUdxT3B1ME9rRVlsNVRVVU8wNnNwQkt3QkNMNS9EelhkRjlKYnU1U0w0cWR6djhuREt3QwpGK3FmQm8zYm1veU12OStsN3NmMXA4ODkrZzVYeDlNODNzOC9ENnFyOWpNRmVVUGpJZVYxeU5MdUFiakFIVGxsCkdybWZheWZrZUFtcTdBSENoSGUwMlZ2bEsyNmdFdDJrR1YwdFJXbjJQbDgwQkdHSW9mQkVDcVdOeUR5VEIrbnEKaUlJN0hIKzVHNVdtWGdobnBaenJDWlhQVHBobEduNkhsc0tQTUFlRDBwWSs4U1J2SUIyK1g5MW1MYTN2emd3UQpDZFJZdXZ6RjJPck1zM1IxMmNrQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFNYUdRZGNTazV2T2Vpdmsrd3BTT1hlSzQvdkEKOGRjdTZ2MWlISERnT2VKbU54UlpMeTVVSDdrejhJalFocVgxeGc4QWJFU3ZmSzROcGJOTlM2T1ZOR2pjSVlpTwpBZlp0cXN0YzU3Q3FHRzVRWkFMNDVVV1VacHZYWWVsanNteFhoUjhqb0lPcEF1WjA4aFc3c2lEQkRCY3hXZ0xyCmQ1ZlZJaXN1bUlDeUVBWGc2dzBkYkZ3VHcyUzExcFEwc3V2NUNFVkwvcTlSM0VPODRONlhxMHorLzNHNThuOGIKQndoSlVoK1pTUC9QRktHTTdYeFdSOE9ObGtCb1RtSGJ2NWNBTUZXZnBjOU9NWjNXK0RtVklLRUJCcm5XT08reQpncWRYZHIrL3dydVZNWUZCZzdLNHRRZWkrM1lmdmJ3U2ZRdG1JR2dHa01JVnhtRFE1eGR1cXZ5WWpEUT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+      service:
+        name: nodedeployment-webhook-service
+        namespace: nd
+        path: /convert
+  group: edge.harmonycloud.cn
+  names:
+    kind: NodeDeployment
+    listKind: NodeDeploymentList
+    plural: nodedeployments
+    singular: nodedeployment
+  scope: Cluster
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: NodeDeployment is the Schema for the nodedeployments API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: NodeDeploymentSpec defines the desired state of NodeDeployment
+          properties:
+            actionPolicy:
+              description: Foo is an example field of NodeDeployment. Edit NodeDeployment_types.go
+                to remove/update
+              type: string
+            cloudNodeIp:
+              type: string
+            edgeNodeName:
+              type: string
+            kubeEdgeVersion:
+              type: string
+            nodeMaintenanceName:
+              type: string
+            platform:
+              type: string
+          required:
+          - actionPolicy
+          - cloudNodeIp
+          - edgeNodeName
+          - kubeEdgeVersion
+          - nodeMaintenanceName
+          - platform
+          type: object
+        status:
+          description: NodeDeploymentStatus defines the observed state of NodeDeployment
+          properties:
+            message:
+              type: string
+            state:
+              description: 'INSERT ADDITIONAL STATUS FIELD - define observed state
+                of cluster Important: Run "make" to regenerate code after modifying
+                this file'
+              type: string
+          required:
+          - message
+          - state
+          type: object
+      type: object
+  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  creationTimestamp: null
+  name: nodedeployment-mutating-webhook-configuration
+webhooks:
+- clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJd01EY3lNREEzTURjeE5Gb1hEVE13TURjeE9EQTNNRGN4TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBUGd1ClhFQU5GYjBSenJLNTE0QTZNb2ZJa0wyOGZ0Mi9xSzdSc2ZRdXRhclgrMzhkNmV1a2VzY0Nzc29RWEhNN1BrYWYKR2x2M01jMVVRZ3ArWUdxT3B1ME9rRVlsNVRVVU8wNnNwQkt3QkNMNS9EelhkRjlKYnU1U0w0cWR6djhuREt3QwpGK3FmQm8zYm1veU12OStsN3NmMXA4ODkrZzVYeDlNODNzOC9ENnFyOWpNRmVVUGpJZVYxeU5MdUFiakFIVGxsCkdybWZheWZrZUFtcTdBSENoSGUwMlZ2bEsyNmdFdDJrR1YwdFJXbjJQbDgwQkdHSW9mQkVDcVdOeUR5VEIrbnEKaUlJN0hIKzVHNVdtWGdobnBaenJDWlhQVHBobEduNkhsc0tQTUFlRDBwWSs4U1J2SUIyK1g5MW1MYTN2emd3UQpDZFJZdXZ6RjJPck1zM1IxMmNrQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFNYUdRZGNTazV2T2Vpdmsrd3BTT1hlSzQvdkEKOGRjdTZ2MWlISERnT2VKbU54UlpMeTVVSDdrejhJalFocVgxeGc4QWJFU3ZmSzROcGJOTlM2T1ZOR2pjSVlpTwpBZlp0cXN0YzU3Q3FHRzVRWkFMNDVVV1VacHZYWWVsanNteFhoUjhqb0lPcEF1WjA4aFc3c2lEQkRCY3hXZ0xyCmQ1ZlZJaXN1bUlDeUVBWGc2dzBkYkZ3VHcyUzExcFEwc3V2NUNFVkwvcTlSM0VPODRONlhxMHorLzNHNThuOGIKQndoSlVoK1pTUC9QRktHTTdYeFdSOE9ObGtCb1RtSGJ2NWNBTUZXZnBjOU9NWjNXK0RtVklLRUJCcm5XT08reQpncWRYZHIrL3dydVZNWUZCZzdLNHRRZWkrM1lmdmJ3U2ZRdG1JR2dHa01JVnhtRFE1eGR1cXZ5WWpEUT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    service:
+      name: nodedeployment-webhook-service
+      namespace: nd
+      path: /mutate-edge-harmonycloud-cn-v1alpha1-nodedeployment
+  failurePolicy: Fail
+  name: mnodedeployment.kb.io
+  rules:
+  - apiGroups:
+    - edge.harmonycloud.cn
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - nodedeployments
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: nodedeployment-leader-election-role
+  namespace: nd
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - configmaps
+  verbs:
+  - get
+  - list
+  - watch
+  - create
+  - update
+  - patch
+  - delete
+- apiGroups:
+  - ""
+  resources:
+  - configmaps/status
+  verbs:
+  - get
+  - update
+  - patch
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  creationTimestamp: null
+  name: nodedeployment-manager-role
+rules:
+- apiGroups:
+  - apps
+  resources:
+  - deployment
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - event
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - node
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - pod
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - secret
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - ""
+  resources:
+  - service
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - edge.harmonycloud.cn
+  resources:
+  - nodedeployment
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - edge.harmonycloud.cn
+  resources:
+  - nodedeployment/status
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - edge.harmonycloud.cn
+  resources:
+  - nodemaintenance
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - edge.harmonycloud.cn
+  resources:
+  - nodemaintenance/status
+  verbs:
+  - get
+  - list
+  - patch
+  - update
+  - watch
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: nodedeployment-proxy-role
+rules:
+- apiGroups:
+  - authentication.k8s.io
+  resources:
+  - tokenreviews
+  verbs:
+  - create
+- apiGroups:
+  - authorization.k8s.io
+  resources:
+  - subjectaccessreviews
+  verbs:
+  - create
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: nodedeployment-metrics-reader
+rules:
+- nonResourceURLs:
+  - /metrics
+  verbs:
+  - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: nodedeployment-leader-election-rolebinding
+  namespace: nd
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: nodedeployment-leader-election-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: nd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: nodedeployment-manager-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin #nodedeployment-manager-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: nd
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: nodedeployment-proxy-rolebinding
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: nodedeployment-proxy-role
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: nd
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: nodedeployment-controller-manager-metrics-service
+  namespace: nd
+spec:
+  ports:
+  - name: https
+    port: 8443
+    targetPort: https
+  selector:
+    control-plane: controller-manager
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nodedeployment-webhook-service
+  namespace: nd
+spec:
+  ports:
+  - port: 443
+    targetPort: 9443
+  selector:
+    control-plane: controller-manager
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    control-plane: controller-manager
+  name: nodedeployment-controller-manager
+  namespace: nd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      control-plane: controller-manager
+  template:
+    metadata:
+      labels:
+        control-plane: controller-manager
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: k8s-node-58
+        #role: node
+      containers:
+      - args:
+        - --secure-listen-address=0.0.0.0:8443
+        - --upstream=http://127.0.0.1:8080/
+        - --logtostderr=true
+        - --v=10
+        image: 10.1.11.196/k8s-deploy/kube-rbac-proxy:v0.4.1
+        name: kube-rbac-proxy
+        ports:
+        - containerPort: 8443
+          name: https
+      - args:
+        - --metrics-addr=127.0.0.1:8080
+        - --enable-leader-election
+        command:
+        - /manager
+        image: 10.1.11.196/library/nodedeployment:1.6
+        name: manager
+        ports:
+        - containerPort: 9443
+          name: webhook-server
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 30Mi
+          requests:
+            cpu: 100m
+            memory: 20Mi
+        volumeMounts:
+        - mountPath: /tmp/k8s-webhook-server/serving-certs
+          name: cert
+          readOnly: true
+      terminationGracePeriodSeconds: 10
+      volumes:
+      - name: cert
+        secret:
+          defaultMode: 420
+          secretName: webhook-server-cert
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  creationTimestamp: null
+  name: nodedeployment-validating-webhook-configuration
+webhooks:
+- clientConfig:
+    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJd01EY3lNREEzTURjeE5Gb1hEVE13TURjeE9EQTNNRGN4TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBUGd1ClhFQU5GYjBSenJLNTE0QTZNb2ZJa0wyOGZ0Mi9xSzdSc2ZRdXRhclgrMzhkNmV1a2VzY0Nzc29RWEhNN1BrYWYKR2x2M01jMVVRZ3ArWUdxT3B1ME9rRVlsNVRVVU8wNnNwQkt3QkNMNS9EelhkRjlKYnU1U0w0cWR6djhuREt3QwpGK3FmQm8zYm1veU12OStsN3NmMXA4ODkrZzVYeDlNODNzOC9ENnFyOWpNRmVVUGpJZVYxeU5MdUFiakFIVGxsCkdybWZheWZrZUFtcTdBSENoSGUwMlZ2bEsyNmdFdDJrR1YwdFJXbjJQbDgwQkdHSW9mQkVDcVdOeUR5VEIrbnEKaUlJN0hIKzVHNVdtWGdobnBaenJDWlhQVHBobEduNkhsc0tQTUFlRDBwWSs4U1J2SUIyK1g5MW1MYTN2emd3UQpDZFJZdXZ6RjJPck1zM1IxMmNrQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFNYUdRZGNTazV2T2Vpdmsrd3BTT1hlSzQvdkEKOGRjdTZ2MWlISERnT2VKbU54UlpMeTVVSDdrejhJalFocVgxeGc4QWJFU3ZmSzROcGJOTlM2T1ZOR2pjSVlpTwpBZlp0cXN0YzU3Q3FHRzVRWkFMNDVVV1VacHZYWWVsanNteFhoUjhqb0lPcEF1WjA4aFc3c2lEQkRCY3hXZ0xyCmQ1ZlZJaXN1bUlDeUVBWGc2dzBkYkZ3VHcyUzExcFEwc3V2NUNFVkwvcTlSM0VPODRONlhxMHorLzNHNThuOGIKQndoSlVoK1pTUC9QRktHTTdYeFdSOE9ObGtCb1RtSGJ2NWNBTUZXZnBjOU9NWjNXK0RtVklLRUJCcm5XT08reQpncWRYZHIrL3dydVZNWUZCZzdLNHRRZWkrM1lmdmJ3U2ZRdG1JR2dHa01JVnhtRFE1eGR1cXZ5WWpEUT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    service:
+      name: nodedeployment-webhook-service
+      namespace: nd
+      path: /validate-edge-harmonycloud-cn-v1alpha1-nodedeployment
+  failurePolicy: Fail
+  name: vnodedeployment.kb.io
+  rules:
+  - apiGroups:
+    - edge.harmonycloud.cn
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - nodedeployments

@@ -1,0 +1,7 @@
+domain: harmonycloud.cn
+repo: nodedeployment
+resources:
+- group: edge
+  kind: NodeDeployment
+  version: v1alpha1
+version: "2"

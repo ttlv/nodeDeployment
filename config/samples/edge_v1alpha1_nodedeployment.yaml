@@ -1,0 +1,11 @@
+apiVersion: edge.harmonycloud.cn/v1alpha1
+kind: NodeDeployment
+metadata:
+  name: nodemaintenances-6290a0bd6a41f430b797
+spec:
+  actionPolicy: deployOnce
+  platform: kubeedge
+  edgeNodeName: node-6290a0bd6a41f430b797
+  nodeMaintenanceName: nodemaintenances-6290a0bd6a41f430b797
+  cloudNodeIp: 10.1.11.41
+  kubeEdgeVersion: 1.4.0

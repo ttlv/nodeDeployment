@@ -1,0 +1,52 @@
+
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: MutatingWebhookConfiguration
+metadata:
+  creationTimestamp: null
+  name: mutating-webhook-configuration
+webhooks:
+- clientConfig:
+    caBundle: Cg==
+    service:
+      name: webhook-service
+      namespace: system
+      path: /mutate-edge-harmonycloud-cn-v1alpha1-nodedeployment
+  failurePolicy: Fail
+  name: mnodedeployment.kb.io
+  rules:
+  - apiGroups:
+    - edge.harmonycloud.cn
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - nodedeployments
+
+---
+apiVersion: admissionregistration.k8s.io/v1beta1
+kind: ValidatingWebhookConfiguration
+metadata:
+  creationTimestamp: null
+  name: validating-webhook-configuration
+webhooks:
+- clientConfig:
+    caBundle: Cg==
+    service:
+      name: webhook-service
+      namespace: system
+      path: /validate-edge-harmonycloud-cn-v1alpha1-nodedeployment
+  failurePolicy: Fail
+  name: vnodedeployment.kb.io
+  rules:
+  - apiGroups:
+    - edge.harmonycloud.cn
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - nodedeployments
