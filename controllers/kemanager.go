@@ -334,7 +334,7 @@ func getSystemArch(sshClient *ssh.Client) (string, error) {
 
 func getSystemArchCentos(sshClient *ssh.Client) (string, error) {
 	arch := "amd64"
-	out, err := util.RunWithOutput(sshClient,"arch")
+	out, err := util.RunWithOutput(sshClient, "arch")
 	if err != nil {
 		return "", err
 	}
@@ -347,7 +347,7 @@ func getSystemArchCentos(sshClient *ssh.Client) (string, error) {
 	case "x86_64":
 		arch = "amd64"
 	default:
-		return "",fmt.Errorf("can't support this architecture of CentOS: %s", out)
+		return "", fmt.Errorf("can't support this architecture of CentOS: %s", out)
 	}
 	return arch, nil
 }

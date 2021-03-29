@@ -46,9 +46,8 @@ type NodeDeploymentStatus struct {
 }
 
 // +kubebuilder:object:root=true
-// 新增
 // +kubebuilder:subresource:status
-// +kubebuilder:resource:scope=Cluster
+// +kubebuilder:resource:scope=Cluster,shortName=nd
 
 // NodeDeployment is the Schema for the nodedeployments API
 type NodeDeployment struct {
