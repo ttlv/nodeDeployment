@@ -13,6 +13,8 @@ spec:
     kind: NodeDeployment
     listKind: NodeDeploymentList
     plural: nodedeployments
+    shortNames:
+    - nd
     singular: nodedeployment
   scope: Cluster
   subresources:
