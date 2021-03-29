@@ -12,7 +12,7 @@ spec:
         role: node
       containers:
       - name: kube-rbac-proxy
-        image: 10.1.11.196/k8s-deploy/kube-rbac-proxy:v0.4.1
+        image: carlosedp/kube-rbac-proxy:v0.5.0
         args:
         - "--secure-listen-address=0.0.0.0:8443"
         - "--upstream=http://127.0.0.1:8080/"
