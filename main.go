@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The HarmonyCloud authors.
+Copyright 2021 ttlv.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -20,16 +20,16 @@ import (
 	"flag"
 	"os"
 
-	nodemaintenance "github.com/ttlv/nodemaintenances/api/v1alpha1"
-
 	"k8s.io/apimachinery/pkg/runtime"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
 	_ "k8s.io/client-go/plugin/pkg/client/auth/gcp"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/log/zap"
 
-	edgev1alpha1 "nodedeployment/api/v1alpha1"
-	"nodedeployment/controllers"
+	nodemaintenance "github.com/ttlv/nodemaintenances/api/v1alpha1"
+
+	edgev1alpha1 "github.com/ttlv/nodedeployment/api/v1alpha1"
+	"github.com/ttlv/nodedeployment/controllers"
 	// +kubebuilder:scaffold:imports
 )
 
@@ -42,6 +42,7 @@ func init() {
 	_ = clientgoscheme.AddToScheme(scheme)
 
 	_ = edgev1alpha1.AddToScheme(scheme)
+	// 注册NM对象
 	_ = nodemaintenance.AddToScheme(scheme)
 	// +kubebuilder:scaffold:scheme
 }
@@ -62,7 +63,7 @@ func main() {
 		MetricsBindAddress: metricsAddr,
 		Port:               9443,
 		LeaderElection:     enableLeaderElection,
-		LeaderElectionID:   "d30cd476.harmonycloud.cn",
+		LeaderElectionID:   "1338eb12.harmonycloud.cn",
 	})
 	if err != nil {
 		setupLog.Error(err, "unable to start manager")
@@ -70,10 +71,9 @@ func main() {
 	}
 
 	if err = (&controllers.NodeDeploymentReconciler{
-		Client:   mgr.GetClient(),
-		Log:      ctrl.Log.WithName("controllers").WithName("NodeDeployment"),
-		Scheme:   mgr.GetScheme(),
-		Recorder: mgr.GetEventRecorderFor("NodeDeployment"), //
+		Client: mgr.GetClient(),
+		Log:    ctrl.Log.WithName("controllers").WithName("NodeDeployment"),
+		Scheme: mgr.GetScheme(),
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "NodeDeployment")
 		os.Exit(1)

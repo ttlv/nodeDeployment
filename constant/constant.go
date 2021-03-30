@@ -1,4 +1,4 @@
-package controllers
+package constant
 
 const (
 	UninstallScriptDestPath = "/root/uninstall.sh"

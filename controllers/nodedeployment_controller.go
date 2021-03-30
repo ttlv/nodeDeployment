@@ -1,5 +1,5 @@
 /*
-Copyright 2020 The HarmonyCloud authors.
+Copyright 2021 ttlv.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -25,13 +25,14 @@ import (
 	"time"
 
 	"github.com/go-logr/logr"
+	"github.com/ttlv/nodedeployment/constant"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	edgev1alpha1 "github.com/ttlv/nodedeployment/api/v1alpha1"
 	nodemaintenance "github.com/ttlv/nodemaintenances/api/v1alpha1"
-	edgev1alpha1 "nodedeployment/api/v1alpha1"
 )
 
 // NodeDeploymentReconciler reconciles a NodeDeployment object
@@ -68,7 +69,7 @@ func (r *NodeDeploymentReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 
 	// 下线操作(云端删除节点，以及与之相关联的资源；边缘端停止edgecore进程，以及删除相关联的资源)
 	// finalizer，当删除 NodeDeployment 对象时，执行节点下线操作
-	removeNodeFinalizer := RemoveNodeFinalizerName
+	removeNodeFinalizer := constant.RemoveNodeFinalizerName
 	// 通过检查 DeletionTimestamp 是否为 0 来判断资源是否正在被删除
 	if nd.ObjectMeta.DeletionTimestamp.IsZero() {
 		// The object is not being deleted, so if it does not have our finalizer,
@@ -116,8 +117,8 @@ func (r *NodeDeploymentReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 
 	// 如果 NodeMaintenance 对象可用，则检查 NodeMaintenance 与该 NodeDeployment 的绑定关系
 	// 1.如果没有绑定，则绑定该 NodeDeployment，同时更新 NodeMaintenance 的绑定状态
-	if nm.Status.BindStatus.Phase == Unbound || nm.Status.BindStatus.Phase == "" {
-		nm.Status.BindStatus.Phase = Bound
+	if nm.Status.BindStatus.Phase == constant.Unbound || nm.Status.BindStatus.Phase == "" {
+		nm.Status.BindStatus.Phase = constant.Bound
 		nm.Status.BindStatus.NodeDeploymentReference = nd.Name
 		nm.Status.BindStatus.TimeStamp = currentTime()
 
@@ -134,7 +135,7 @@ func (r *NodeDeploymentReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 		}
 	}
 	// 根据 NodeDeployment 查询对应的节点
-	IP, Port = getInfoFromNodeMaintenance(nm)
+	constant.IP, constant.Port = getInfoFromNodeMaintenance(nm)
 	edgeNode := nd.Spec.EdgeNodeName
 	node := &corev1.Node{}
 	if err := r.Get(ctx, types.NamespacedName{Namespace: "", Name: edgeNode}, node); err != nil { // 节点不在集群中
@@ -181,7 +182,7 @@ func (r *NodeDeploymentReconciler) Reconcile(req ctrl.Request) (ctrl.Result, err
 		log.V(1).Info(msg)
 		// 如果执行节点上线的策略是 DeployOnce，则直接退出（暂时只设计了这一种上线策略）
 		// 现在，我们只考虑节点上线，不考虑edgecore挂掉的情况（暂时不维护这种情况，由用户自己维护）
-		if nd.Spec.ActionPolicy == DeployOnce {
+		if nd.Spec.ActionPolicy == constant.DeployOnce {
 			return ctrl.Result{}, nil
 		} else {
 			// unreachable now(2020-09-17)

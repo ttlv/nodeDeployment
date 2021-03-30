@@ -8,7 +8,6 @@ rules:
   - edge.harmonycloud.cn
   resources:
   - nodedeployments
-  - nodemaintenances
   verbs:
   - get
   - list
@@ -17,6 +16,5 @@ rules:
   - edge.harmonycloud.cn
   resources:
   - nodedeployments/status
-  - nodemaintenances/status
   verbs:
   - get

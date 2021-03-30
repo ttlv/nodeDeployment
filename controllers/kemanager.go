@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	edgev1alpha1 "github.com/ttlv/nodedeployment/api/v1alpha1"
+	"github.com/ttlv/nodedeployment/constant"
+	"github.com/ttlv/nodedeployment/utils"
 	"golang.org/x/crypto/ssh"
 	corev1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/types"
-	edgev1alpha1 "nodedeployment/api/v1alpha1"
-	"nodedeployment/util"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
@@ -29,7 +30,7 @@ func Join(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1alpha1.NodeDe
 
 	// 到这里，节点上线的3个步骤正常执行完成，但不代表 edgecore 就立刻连入集群
 	// 需要等待一定时间(默认10秒)，检查 cloud 端能否正常获取到新加入的节点信息，当且仅当新节点已加入并且状态为 Ready 才表示节点上线成功
-	time.Sleep(TimeoutForJoin * time.Second)
+	time.Sleep(constant.TimeoutForJoin * time.Second)
 
 	node := &corev1.Node{}
 	// 新节点不在集群中
@@ -63,7 +64,7 @@ func DisJoin(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1alpha1.Nod
 }
 
 func doJoin(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1alpha1.NodeDeployment) error {
-	sshClient, err := createSSHClient(r, req, User, IP, Password, Port)
+	sshClient, err := createSSHClient(r, req, constant.User, constant.IP, constant.Password, constant.Port)
 	if err != nil {
 		message := "[stage: join], create ssh client via FRP failed"
 		r.Recorder.Event(nd, corev1.EventTypeWarning, "NetworkError", message)
@@ -120,7 +121,7 @@ func doJoin(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1alpha1.Node
 func doDisJoin(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1alpha1.NodeDeployment) error {
 	log := r.Log.WithValues("nodedeployment", req.NamespacedName)
 
-	sshClient, err := createSSHClient(r, req, User, IP, Password, Port)
+	sshClient, err := createSSHClient(r, req, constant.User, constant.IP, constant.Password, constant.Port)
 	if err != nil {
 		msg := "[stage: disjoin], create ssh client via FRP failed"
 		r.Recorder.Event(nd, corev1.EventTypeWarning, "NetworkError", msg)
@@ -143,7 +144,7 @@ func doDisJoin(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1alpha1.N
 	if err != nil {
 		return err
 	}
-	nm.Status.BindStatus.Phase = Unbound
+	nm.Status.BindStatus.Phase = constant.Unbound
 	nm.Status.BindStatus.NodeDeploymentReference = ""
 	nm.Status.BindStatus.TimeStamp = currentTime()
 
@@ -185,7 +186,7 @@ func doDisJoin(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1alpha1.N
 func createSSHClient(r *NodeDeploymentReconciler, req ctrl.Request, user, ip, password string, port int) (*ssh.Client, error) {
 	log := r.Log.WithValues("nodedeployment", req.NamespacedName)
 
-	for i := 0; i < RetryTimes; i++ {
+	for i := 0; i < constant.RetryTimes; i++ {
 		// TODO: it is NOT safe here, please use util.CreateClientByKey(rsaPath, user, host, port)
 		// for a new edge node, how to deal with rsa file?
 		if sshClient, err := util.CreateClientByPassword(user, ip, password, port); err != nil {
@@ -195,7 +196,7 @@ func createSSHClient(r *NodeDeploymentReconciler, req ctrl.Request, user, ip, pa
 			return sshClient, nil
 		}
 	}
-	log.V(1).Info("After try " + strconv.Itoa(RetryTimes) + " times, still unable to create ssh client")
+	log.V(1).Info("After try " + strconv.Itoa(constant.RetryTimes) + " times, still unable to create ssh client")
 	return nil, errors.New("create ssh client error")
 }
 
@@ -203,10 +204,10 @@ func createSSHClient(r *NodeDeploymentReconciler, req ctrl.Request, user, ip, pa
 func downloadScript(r *NodeDeploymentReconciler, req ctrl.Request, sshClient *ssh.Client) error {
 	log := r.Log.WithValues("nodedeployment", req.NamespacedName)
 
-	for i := 0; i < RetryTimes; i++ {
+	for i := 0; i < constant.RetryTimes; i++ {
 		// cmd := "wget -k --no-check-certificate https://edgedev.harmonycloud.online:10443/kubeedge/kubeedge/scripts/install.sh"
 
-		cmd := fmt.Sprintf("mkdir -p %s && cd %s && rm -f * && sudo wget -k --no-check-certificate %s%s", ScriptPath, ScriptPath, KubeEdgeScriptsURL, "install.sh")
+		cmd := fmt.Sprintf("mkdir -p %s && cd %s && rm -f * && sudo wget -k --no-check-certificate %s%s", constant.ScriptPath, constant.ScriptPath, constant.KubeEdgeScriptsURL, "install.sh")
 		if err := util.Run(sshClient, cmd); err != nil {
 			log.Error(err, "Unable to download script from server")
 			log.V(1).Info("Unable to copy script from server, try again")
@@ -214,7 +215,7 @@ func downloadScript(r *NodeDeploymentReconciler, req ctrl.Request, sshClient *ss
 			return nil
 		}
 	}
-	log.V(1).Info("After try " + strconv.Itoa(RetryTimes) + " times, still unable to download script from server")
+	log.V(1).Info("After try " + strconv.Itoa(constant.RetryTimes) + " times, still unable to download script from server")
 	return errors.New("download script from server error")
 }
 
@@ -234,9 +235,9 @@ func executeJoinScript(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1
 	cloudNodeIP := nd.Spec.CloudNodeIP
 	version := nd.Spec.KubeEdgeVersion
 	edgeNodeName := nd.Spec.EdgeNodeName
-	command := fmt.Sprintf("/bin/bash %s/%s %s %s %s %s", ScriptPath, "install.sh", cloudNodeIP, version, token, edgeNodeName)
+	command := fmt.Sprintf("/bin/bash %s/%s %s %s %s %s", constant.ScriptPath, "install.sh", cloudNodeIP, version, token, edgeNodeName)
 	log.V(1).Info("start installing edge node...")
-	for i := 0; i < RetryTimes; i++ {
+	for i := 0; i < constant.RetryTimes; i++ {
 		if out, err := util.RunWithOutput(sshClient, command); err != nil {
 			log.Error(err, "Unable to run command on edge")
 			log.V(1).Info("Unable to run command on edge, try again")
@@ -245,7 +246,7 @@ func executeJoinScript(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1
 			return nil
 		}
 	}
-	log.V(1).Info("After try " + strconv.Itoa(RetryTimes) + " times, still unable to run command on edge")
+	log.V(1).Info("After try " + strconv.Itoa(constant.RetryTimes) + " times, still unable to run command on edge")
 	return errors.New("execute scripts error")
 }
 
@@ -293,7 +294,7 @@ func downloadKeadm(r *NodeDeploymentReconciler, nd *edgev1alpha1.NodeDeployment,
 		return err
 	}
 
-	for i := 0; i < RetryTimes; i++ {
+	for i := 0; i < constant.RetryTimes; i++ {
 		// cmd := "sudo wget -k --no-check-certificate https://edgedev.harmonycloud.online:10443/kubeedge/kubeedge/keadm-hc/keadm-v1.4.0-linux-arm64/keadm"
 		cmd := fmt.Sprintf("sudo wget -k --no-check-certificate https://edgedev.harmonycloud.online:10443/kubeedge/kubeedge/keadm-hc/keadm-v%s-linux-%s/keadm && chmod +x keadm && cp keadm /usr/local/bin/", nd.Spec.KubeEdgeVersion, arch)
 		if err := util.Run(sshClient, cmd); err != nil {
@@ -303,7 +304,7 @@ func downloadKeadm(r *NodeDeploymentReconciler, nd *edgev1alpha1.NodeDeployment,
 			return nil
 		}
 	}
-	log.V(1).Info("After try " + strconv.Itoa(RetryTimes) + " times, still unable to download keadm")
+	log.V(1).Info("After try " + strconv.Itoa(constant.RetryTimes) + " times, still unable to download keadm")
 	return errors.New("download keadm error")
 }
 
@@ -367,9 +368,9 @@ func GetOSInterface(sshClient *ssh.Client) (string, error) {
 	}
 	fmt.Printf("edge node's OS type is [%s]\n", OS)
 	switch OS {
-	case UbuntuOSType, RaspbianOSType, DebianOSType:
+	case constant.UbuntuOSType, constant.RaspbianOSType, constant.DebianOSType:
 		return "ubuntu", nil //
-	case CentOSType:
+	case constant.CentOSType:
 		return "centos", nil //
 	default:
 		fmt.Printf("This OS version is currently un-supported by keadm, %s", OS)

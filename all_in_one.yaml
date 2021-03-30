@@ -3,7 +3,7 @@ kind: Namespace
 metadata:
   labels:
     control-plane: controller-manager
-  name: nd
+  name: nodedeployment-system
 ---
 apiVersion: apiextensions.k8s.io/v1beta1
 kind: CustomResourceDefinition
@@ -13,21 +13,23 @@ metadata:
   creationTimestamp: null
   name: nodedeployments.edge.harmonycloud.cn
 spec:
-  preserveUnknownFields: false
   conversion:
     strategy: Webhook
     webhookClientConfig:
-      caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJd01EY3lNREEzTURjeE5Gb1hEVE13TURjeE9EQTNNRGN4TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBUGd1ClhFQU5GYjBSenJLNTE0QTZNb2ZJa0wyOGZ0Mi9xSzdSc2ZRdXRhclgrMzhkNmV1a2VzY0Nzc29RWEhNN1BrYWYKR2x2M01jMVVRZ3ArWUdxT3B1ME9rRVlsNVRVVU8wNnNwQkt3QkNMNS9EelhkRjlKYnU1U0w0cWR6djhuREt3QwpGK3FmQm8zYm1veU12OStsN3NmMXA4ODkrZzVYeDlNODNzOC9ENnFyOWpNRmVVUGpJZVYxeU5MdUFiakFIVGxsCkdybWZheWZrZUFtcTdBSENoSGUwMlZ2bEsyNmdFdDJrR1YwdFJXbjJQbDgwQkdHSW9mQkVDcVdOeUR5VEIrbnEKaUlJN0hIKzVHNVdtWGdobnBaenJDWlhQVHBobEduNkhsc0tQTUFlRDBwWSs4U1J2SUIyK1g5MW1MYTN2emd3UQpDZFJZdXZ6RjJPck1zM1IxMmNrQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFNYUdRZGNTazV2T2Vpdmsrd3BTT1hlSzQvdkEKOGRjdTZ2MWlISERnT2VKbU54UlpMeTVVSDdrejhJalFocVgxeGc4QWJFU3ZmSzROcGJOTlM2T1ZOR2pjSVlpTwpBZlp0cXN0YzU3Q3FHRzVRWkFMNDVVV1VacHZYWWVsanNteFhoUjhqb0lPcEF1WjA4aFc3c2lEQkRCY3hXZ0xyCmQ1ZlZJaXN1bUlDeUVBWGc2dzBkYkZ3VHcyUzExcFEwc3V2NUNFVkwvcTlSM0VPODRONlhxMHorLzNHNThuOGIKQndoSlVoK1pTUC9QRktHTTdYeFdSOE9ObGtCb1RtSGJ2NWNBTUZXZnBjOU9NWjNXK0RtVklLRUJCcm5XT08reQpncWRYZHIrL3dydVZNWUZCZzdLNHRRZWkrM1lmdmJ3U2ZRdG1JR2dHa01JVnhtRFE1eGR1cXZ5WWpEUT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+      caBundle: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVBNnh1dTZZRE5lKzdMaXhWNzBwY3F0WHdjcVdLN2dWSTBVd2NscVIwOTZuYXVFaE9CCmkzb29ZQjYxdlY3YjNTU3B3cFF1QUc3dkw1YmVLemI4RHYzS0pDNG9iS1J3bFppRTV2djJvR0pkdjNzM25wL04KSWpuK1YvMzVLUWQrL0xReDNkc2RGYkJKbDQ4RWovWG44K1RsRzhGakpEM1FXWVc5bFJLV1EzaUp6eWFuZXVWNgpINDBtRXRrclRmQkdMOWtWcFZ5bE5nYnA4V3VjZmwrSDdISzQxWVBEdGRRSWxyWkt6TlkvaTJyeXIrbkZqYjZaCjhxRS93ZkVKUE1xZWtZRjlyS0VvbEE4Z0lDZEZVUWV3RmpSTHl3Tk0zYmQxUUM3TjhFMCtsbTFkcWY1R2tKZjYKTW84eS9SRUtnOXhHTFNHYTZyMGo4eFozZDBZV1BSWUdxSGJwaHdJREFRQUJBb0lCQVFDS2VIQ0pXSEl0NXhQOApvN2VjN2FtYTRERmxWaUJIWjJvbjZKSzJ5dUUzb1pTZVV0eStrRUVOYzZqb2t1RDltMlZjazdlUVM4WVdDazVwCnQyVzNVcVJtc01UZ1QrMTdQaXd3ZXYvanNHdTBwbGE0MXplVFRBTFFRbVlvVXlEb3B4eWpwVFM1SEc0TGxKRkUKVkxtN2ZQbXZZalFKR1ZzSUR1djh5OGl5am1Ea0hxZ00xNTJGY2wyNWVjcUVjay9rRjVoQVlGRFJQcGdZT28vdApPS29tcklKVXNYYys3ZzAwVlRFUEdoTm1wcDkySjN0NCtrMm11ZlV3cnNzRFBqc21hdFdlOGFpbkIvK1ptR1oxCjBPSFZ0ajlmM2pkOENLVGd6QS9qQlZSVWRSS2VCQ3NyaFR2R0NrVmtkR3RCWUpWUDVPM1kxMThZa0E5R3lIZzgKWjdjZ2I4VWhBb0dCQVBobysrYStNRWREMFJrYWtwQzJzdjBSTFBkaEd2Tlh6VVN4L1gyR0RiQnF0MkdhUzNubApGWnRETzBIQ3dMYVpQc0VibVJIWTUvYXpuMFpNMTNzM0dYZTdOWGRWSVVIS2F2bW94SUg0S3NncXRXbUlsUUdtCnYzWU43enNsbHpVdkxRdGdLSjBwZnJxR1lSRFhIVGk2K0s1STRGVHhWNzc2bU1JUXNVVXg5Q2JSQW9HQkFQSksKcDJjaXgvc1ZUNEEvcnZCaW4wL3M4VWYyYXpIcnBpZWZjRWpKcVpqM2UrYVZ4WFJKdzJjMTI4a1pSR0c5MTVHbwpYZnRJaXpLMjBCODdhc01nbzU3ckhqNDdDQjFzaTBNNTU4YXlMUE12OFU0eWRCVWJLYjFNVXNoYTVPMkJPYnd0CkdLYWN2dEZIVFFldFNvMDZLeDFlTDJUMnBleHVwUkpMcjJEMytWRFhBb0dBR2s0anZyK05KVDdOT2JkU3BmaHkKNDlHWnpXaC9EaDNTSXVBbVU5Q0tTcEJDY3hkL3ZweS91UDFablJFZWp6ZVRLYWZlZ2NGU2J4RitZRmRxeWlWLwprT3BHTXlqVXFMN2lyU1Z1Q2NWWjRuQ0RYWFdWTWVPU2l0SFc3NUIvZnFaTVF0UWYrT1NZQXZDUC90U0l4NlVsCkNHKzNNY2VNM3pCeVZMcW55d2dMTHNFQ2dZRUE2dFd3cXlYcTdsRVpYUlJjV21FOFNCcy9RS0IyQlV5QkhxWksKRGtKblB2dWYrejN1dzJjN0hTMzJlRk1sRkJjTWVRRFhGbGFaayszY2ltanNjWE9SSXRaLzJaRWRyR2NvRTJCcwpaUWtNeUNnUG1kc001K2dMN0kydExzUHFYc2lCVFFIb2dwUXAzbTFkRzdPNkxtZlNvZ1JIcTNQa0hlU2YyYnZCCm9CcTRhc0VDZ1lFQWpSenBFVnphMEp1U2JKalVDY0FOWmkrTENtZ05zZHEzdnlTTWx3SVF5Uy9lZDdzd3FWM2kKTjBWckJwM1FucFpGd0VjckJDQnVHK3huUThJWHJYUVdpVjBES29IK1loR3lLVDdpbDVzZmNGbHNsWjV6UWFaYwpqOUIxSG0zOGduUXF2OUYxbjZybjAwRVpsWmZucWgxbkYrV1Zkb0lIcXF6VHNJdXR4Wk02aHNjPQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
       service:
         name: nodedeployment-webhook-service
-        namespace: nd
+        namespace: nodedeployment-system
         path: /convert
   group: edge.harmonycloud.cn
   names:
     kind: NodeDeployment
     listKind: NodeDeploymentList
     plural: nodedeployments
+    shortNames:
+    - nd
     singular: nodedeployment
+  preserveUnknownFields: false
   scope: Cluster
   subresources:
     status: {}
@@ -106,10 +108,10 @@ metadata:
   name: nodedeployment-mutating-webhook-configuration
 webhooks:
 - clientConfig:
-    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJd01EY3lNREEzTURjeE5Gb1hEVE13TURjeE9EQTNNRGN4TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBUGd1ClhFQU5GYjBSenJLNTE0QTZNb2ZJa0wyOGZ0Mi9xSzdSc2ZRdXRhclgrMzhkNmV1a2VzY0Nzc29RWEhNN1BrYWYKR2x2M01jMVVRZ3ArWUdxT3B1ME9rRVlsNVRVVU8wNnNwQkt3QkNMNS9EelhkRjlKYnU1U0w0cWR6djhuREt3QwpGK3FmQm8zYm1veU12OStsN3NmMXA4ODkrZzVYeDlNODNzOC9ENnFyOWpNRmVVUGpJZVYxeU5MdUFiakFIVGxsCkdybWZheWZrZUFtcTdBSENoSGUwMlZ2bEsyNmdFdDJrR1YwdFJXbjJQbDgwQkdHSW9mQkVDcVdOeUR5VEIrbnEKaUlJN0hIKzVHNVdtWGdobnBaenJDWlhQVHBobEduNkhsc0tQTUFlRDBwWSs4U1J2SUIyK1g5MW1MYTN2emd3UQpDZFJZdXZ6RjJPck1zM1IxMmNrQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFNYUdRZGNTazV2T2Vpdmsrd3BTT1hlSzQvdkEKOGRjdTZ2MWlISERnT2VKbU54UlpMeTVVSDdrejhJalFocVgxeGc4QWJFU3ZmSzROcGJOTlM2T1ZOR2pjSVlpTwpBZlp0cXN0YzU3Q3FHRzVRWkFMNDVVV1VacHZYWWVsanNteFhoUjhqb0lPcEF1WjA4aFc3c2lEQkRCY3hXZ0xyCmQ1ZlZJaXN1bUlDeUVBWGc2dzBkYkZ3VHcyUzExcFEwc3V2NUNFVkwvcTlSM0VPODRONlhxMHorLzNHNThuOGIKQndoSlVoK1pTUC9QRktHTTdYeFdSOE9ObGtCb1RtSGJ2NWNBTUZXZnBjOU9NWjNXK0RtVklLRUJCcm5XT08reQpncWRYZHIrL3dydVZNWUZCZzdLNHRRZWkrM1lmdmJ3U2ZRdG1JR2dHa01JVnhtRFE1eGR1cXZ5WWpEUT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    caBundle: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVBNnh1dTZZRE5lKzdMaXhWNzBwY3F0WHdjcVdLN2dWSTBVd2NscVIwOTZuYXVFaE9CCmkzb29ZQjYxdlY3YjNTU3B3cFF1QUc3dkw1YmVLemI4RHYzS0pDNG9iS1J3bFppRTV2djJvR0pkdjNzM25wL04KSWpuK1YvMzVLUWQrL0xReDNkc2RGYkJKbDQ4RWovWG44K1RsRzhGakpEM1FXWVc5bFJLV1EzaUp6eWFuZXVWNgpINDBtRXRrclRmQkdMOWtWcFZ5bE5nYnA4V3VjZmwrSDdISzQxWVBEdGRRSWxyWkt6TlkvaTJyeXIrbkZqYjZaCjhxRS93ZkVKUE1xZWtZRjlyS0VvbEE4Z0lDZEZVUWV3RmpSTHl3Tk0zYmQxUUM3TjhFMCtsbTFkcWY1R2tKZjYKTW84eS9SRUtnOXhHTFNHYTZyMGo4eFozZDBZV1BSWUdxSGJwaHdJREFRQUJBb0lCQVFDS2VIQ0pXSEl0NXhQOApvN2VjN2FtYTRERmxWaUJIWjJvbjZKSzJ5dUUzb1pTZVV0eStrRUVOYzZqb2t1RDltMlZjazdlUVM4WVdDazVwCnQyVzNVcVJtc01UZ1QrMTdQaXd3ZXYvanNHdTBwbGE0MXplVFRBTFFRbVlvVXlEb3B4eWpwVFM1SEc0TGxKRkUKVkxtN2ZQbXZZalFKR1ZzSUR1djh5OGl5am1Ea0hxZ00xNTJGY2wyNWVjcUVjay9rRjVoQVlGRFJQcGdZT28vdApPS29tcklKVXNYYys3ZzAwVlRFUEdoTm1wcDkySjN0NCtrMm11ZlV3cnNzRFBqc21hdFdlOGFpbkIvK1ptR1oxCjBPSFZ0ajlmM2pkOENLVGd6QS9qQlZSVWRSS2VCQ3NyaFR2R0NrVmtkR3RCWUpWUDVPM1kxMThZa0E5R3lIZzgKWjdjZ2I4VWhBb0dCQVBobysrYStNRWREMFJrYWtwQzJzdjBSTFBkaEd2Tlh6VVN4L1gyR0RiQnF0MkdhUzNubApGWnRETzBIQ3dMYVpQc0VibVJIWTUvYXpuMFpNMTNzM0dYZTdOWGRWSVVIS2F2bW94SUg0S3NncXRXbUlsUUdtCnYzWU43enNsbHpVdkxRdGdLSjBwZnJxR1lSRFhIVGk2K0s1STRGVHhWNzc2bU1JUXNVVXg5Q2JSQW9HQkFQSksKcDJjaXgvc1ZUNEEvcnZCaW4wL3M4VWYyYXpIcnBpZWZjRWpKcVpqM2UrYVZ4WFJKdzJjMTI4a1pSR0c5MTVHbwpYZnRJaXpLMjBCODdhc01nbzU3ckhqNDdDQjFzaTBNNTU4YXlMUE12OFU0eWRCVWJLYjFNVXNoYTVPMkJPYnd0CkdLYWN2dEZIVFFldFNvMDZLeDFlTDJUMnBleHVwUkpMcjJEMytWRFhBb0dBR2s0anZyK05KVDdOT2JkU3BmaHkKNDlHWnpXaC9EaDNTSXVBbVU5Q0tTcEJDY3hkL3ZweS91UDFablJFZWp6ZVRLYWZlZ2NGU2J4RitZRmRxeWlWLwprT3BHTXlqVXFMN2lyU1Z1Q2NWWjRuQ0RYWFdWTWVPU2l0SFc3NUIvZnFaTVF0UWYrT1NZQXZDUC90U0l4NlVsCkNHKzNNY2VNM3pCeVZMcW55d2dMTHNFQ2dZRUE2dFd3cXlYcTdsRVpYUlJjV21FOFNCcy9RS0IyQlV5QkhxWksKRGtKblB2dWYrejN1dzJjN0hTMzJlRk1sRkJjTWVRRFhGbGFaayszY2ltanNjWE9SSXRaLzJaRWRyR2NvRTJCcwpaUWtNeUNnUG1kc001K2dMN0kydExzUHFYc2lCVFFIb2dwUXAzbTFkRzdPNkxtZlNvZ1JIcTNQa0hlU2YyYnZCCm9CcTRhc0VDZ1lFQWpSenBFVnphMEp1U2JKalVDY0FOWmkrTENtZ05zZHEzdnlTTWx3SVF5Uy9lZDdzd3FWM2kKTjBWckJwM1FucFpGd0VjckJDQnVHK3huUThJWHJYUVdpVjBES29IK1loR3lLVDdpbDVzZmNGbHNsWjV6UWFaYwpqOUIxSG0zOGduUXF2OUYxbjZybjAwRVpsWmZucWgxbkYrV1Zkb0lIcXF6VHNJdXR4Wk02aHNjPQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
     service:
       name: nodedeployment-webhook-service
-      namespace: nd
+      namespace: nodedeployment-system
       path: /mutate-edge-harmonycloud-cn-v1alpha1-nodedeployment
   failurePolicy: Fail
   name: mnodedeployment.kb.io
@@ -128,7 +130,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: nodedeployment-leader-election-role
-  namespace: nd
+  namespace: nodedeployment-system
 rules:
 - apiGroups:
   - ""
@@ -253,10 +255,8 @@ rules:
   - nodedeployment/status
   verbs:
   - get
-  - list
   - patch
   - update
-  - watch
 - apiGroups:
   - edge.harmonycloud.cn
   resources:
@@ -275,10 +275,8 @@ rules:
   - nodemaintenance/status
   verbs:
   - get
-  - list
   - patch
   - update
-  - watch
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
@@ -312,7 +310,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: nodedeployment-leader-election-rolebinding
-  namespace: nd
+  namespace: nodedeployment-system
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -320,7 +318,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: nd
+  namespace: nodedeployment-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -329,11 +327,11 @@ metadata:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin #nodedeployment-manager-role
+  name: nodedeployment-manager-role
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: nd
+  namespace: nodedeployment-system
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
@@ -346,7 +344,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: nd
+  namespace: nodedeployment-system
 ---
 apiVersion: v1
 kind: Service
@@ -354,7 +352,7 @@ metadata:
   labels:
     control-plane: controller-manager
   name: nodedeployment-controller-manager-metrics-service
-  namespace: nd
+  namespace: nodedeployment-system
 spec:
   ports:
   - name: https
@@ -367,7 +365,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: nodedeployment-webhook-service
-  namespace: nd
+  namespace: nodedeployment-system
 spec:
   ports:
   - port: 443
@@ -381,7 +379,7 @@ metadata:
   labels:
     control-plane: controller-manager
   name: nodedeployment-controller-manager
-  namespace: nd
+  namespace: nodedeployment-system
 spec:
   replicas: 1
   selector:
@@ -392,16 +390,13 @@ spec:
       labels:
         control-plane: controller-manager
     spec:
-      nodeSelector:
-        kubernetes.io/hostname: k8s-node-58
-        #role: node
       containers:
       - args:
         - --secure-listen-address=0.0.0.0:8443
         - --upstream=http://127.0.0.1:8080/
         - --logtostderr=true
         - --v=10
-        image: 10.1.11.196/k8s-deploy/kube-rbac-proxy:v0.4.1
+        image: carlosedp/kube-rbac-proxy:v0.5.0
         name: kube-rbac-proxy
         ports:
         - containerPort: 8443
@@ -411,12 +406,8 @@ spec:
         - --enable-leader-election
         command:
         - /manager
-        image: 10.1.11.196/library/nodedeployment:1.6
+        image: gopherlv/nd-controller:44d09de8
         name: manager
-        ports:
-        - containerPort: 9443
-          name: webhook-server
-          protocol: TCP
         resources:
           limits:
             cpu: 100m
@@ -424,16 +415,9 @@ spec:
           requests:
             cpu: 100m
             memory: 20Mi
-        volumeMounts:
-        - mountPath: /tmp/k8s-webhook-server/serving-certs
-          name: cert
-          readOnly: true
+      nodeSelector:
+        kubernetes.io/hostname: node-687d8b56dac5037a24dc
       terminationGracePeriodSeconds: 10
-      volumes:
-      - name: cert
-        secret:
-          defaultMode: 420
-          secretName: webhook-server-cert
 ---
 apiVersion: admissionregistration.k8s.io/v1beta1
 kind: ValidatingWebhookConfiguration
@@ -442,10 +426,10 @@ metadata:
   name: nodedeployment-validating-webhook-configuration
 webhooks:
 - clientConfig:
-    caBundle: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRJd01EY3lNREEzTURjeE5Gb1hEVE13TURjeE9EQTNNRGN4TkZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBUGd1ClhFQU5GYjBSenJLNTE0QTZNb2ZJa0wyOGZ0Mi9xSzdSc2ZRdXRhclgrMzhkNmV1a2VzY0Nzc29RWEhNN1BrYWYKR2x2M01jMVVRZ3ArWUdxT3B1ME9rRVlsNVRVVU8wNnNwQkt3QkNMNS9EelhkRjlKYnU1U0w0cWR6djhuREt3QwpGK3FmQm8zYm1veU12OStsN3NmMXA4ODkrZzVYeDlNODNzOC9ENnFyOWpNRmVVUGpJZVYxeU5MdUFiakFIVGxsCkdybWZheWZrZUFtcTdBSENoSGUwMlZ2bEsyNmdFdDJrR1YwdFJXbjJQbDgwQkdHSW9mQkVDcVdOeUR5VEIrbnEKaUlJN0hIKzVHNVdtWGdobnBaenJDWlhQVHBobEduNkhsc0tQTUFlRDBwWSs4U1J2SUIyK1g5MW1MYTN2emd3UQpDZFJZdXZ6RjJPck1zM1IxMmNrQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFNYUdRZGNTazV2T2Vpdmsrd3BTT1hlSzQvdkEKOGRjdTZ2MWlISERnT2VKbU54UlpMeTVVSDdrejhJalFocVgxeGc4QWJFU3ZmSzROcGJOTlM2T1ZOR2pjSVlpTwpBZlp0cXN0YzU3Q3FHRzVRWkFMNDVVV1VacHZYWWVsanNteFhoUjhqb0lPcEF1WjA4aFc3c2lEQkRCY3hXZ0xyCmQ1ZlZJaXN1bUlDeUVBWGc2dzBkYkZ3VHcyUzExcFEwc3V2NUNFVkwvcTlSM0VPODRONlhxMHorLzNHNThuOGIKQndoSlVoK1pTUC9QRktHTTdYeFdSOE9ObGtCb1RtSGJ2NWNBTUZXZnBjOU9NWjNXK0RtVklLRUJCcm5XT08reQpncWRYZHIrL3dydVZNWUZCZzdLNHRRZWkrM1lmdmJ3U2ZRdG1JR2dHa01JVnhtRFE1eGR1cXZ5WWpEUT0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+    caBundle: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQpNSUlFcFFJQkFBS0NBUUVBNnh1dTZZRE5lKzdMaXhWNzBwY3F0WHdjcVdLN2dWSTBVd2NscVIwOTZuYXVFaE9CCmkzb29ZQjYxdlY3YjNTU3B3cFF1QUc3dkw1YmVLemI4RHYzS0pDNG9iS1J3bFppRTV2djJvR0pkdjNzM25wL04KSWpuK1YvMzVLUWQrL0xReDNkc2RGYkJKbDQ4RWovWG44K1RsRzhGakpEM1FXWVc5bFJLV1EzaUp6eWFuZXVWNgpINDBtRXRrclRmQkdMOWtWcFZ5bE5nYnA4V3VjZmwrSDdISzQxWVBEdGRRSWxyWkt6TlkvaTJyeXIrbkZqYjZaCjhxRS93ZkVKUE1xZWtZRjlyS0VvbEE4Z0lDZEZVUWV3RmpSTHl3Tk0zYmQxUUM3TjhFMCtsbTFkcWY1R2tKZjYKTW84eS9SRUtnOXhHTFNHYTZyMGo4eFozZDBZV1BSWUdxSGJwaHdJREFRQUJBb0lCQVFDS2VIQ0pXSEl0NXhQOApvN2VjN2FtYTRERmxWaUJIWjJvbjZKSzJ5dUUzb1pTZVV0eStrRUVOYzZqb2t1RDltMlZjazdlUVM4WVdDazVwCnQyVzNVcVJtc01UZ1QrMTdQaXd3ZXYvanNHdTBwbGE0MXplVFRBTFFRbVlvVXlEb3B4eWpwVFM1SEc0TGxKRkUKVkxtN2ZQbXZZalFKR1ZzSUR1djh5OGl5am1Ea0hxZ00xNTJGY2wyNWVjcUVjay9rRjVoQVlGRFJQcGdZT28vdApPS29tcklKVXNYYys3ZzAwVlRFUEdoTm1wcDkySjN0NCtrMm11ZlV3cnNzRFBqc21hdFdlOGFpbkIvK1ptR1oxCjBPSFZ0ajlmM2pkOENLVGd6QS9qQlZSVWRSS2VCQ3NyaFR2R0NrVmtkR3RCWUpWUDVPM1kxMThZa0E5R3lIZzgKWjdjZ2I4VWhBb0dCQVBobysrYStNRWREMFJrYWtwQzJzdjBSTFBkaEd2Tlh6VVN4L1gyR0RiQnF0MkdhUzNubApGWnRETzBIQ3dMYVpQc0VibVJIWTUvYXpuMFpNMTNzM0dYZTdOWGRWSVVIS2F2bW94SUg0S3NncXRXbUlsUUdtCnYzWU43enNsbHpVdkxRdGdLSjBwZnJxR1lSRFhIVGk2K0s1STRGVHhWNzc2bU1JUXNVVXg5Q2JSQW9HQkFQSksKcDJjaXgvc1ZUNEEvcnZCaW4wL3M4VWYyYXpIcnBpZWZjRWpKcVpqM2UrYVZ4WFJKdzJjMTI4a1pSR0c5MTVHbwpYZnRJaXpLMjBCODdhc01nbzU3ckhqNDdDQjFzaTBNNTU4YXlMUE12OFU0eWRCVWJLYjFNVXNoYTVPMkJPYnd0CkdLYWN2dEZIVFFldFNvMDZLeDFlTDJUMnBleHVwUkpMcjJEMytWRFhBb0dBR2s0anZyK05KVDdOT2JkU3BmaHkKNDlHWnpXaC9EaDNTSXVBbVU5Q0tTcEJDY3hkL3ZweS91UDFablJFZWp6ZVRLYWZlZ2NGU2J4RitZRmRxeWlWLwprT3BHTXlqVXFMN2lyU1Z1Q2NWWjRuQ0RYWFdWTWVPU2l0SFc3NUIvZnFaTVF0UWYrT1NZQXZDUC90U0l4NlVsCkNHKzNNY2VNM3pCeVZMcW55d2dMTHNFQ2dZRUE2dFd3cXlYcTdsRVpYUlJjV21FOFNCcy9RS0IyQlV5QkhxWksKRGtKblB2dWYrejN1dzJjN0hTMzJlRk1sRkJjTWVRRFhGbGFaayszY2ltanNjWE9SSXRaLzJaRWRyR2NvRTJCcwpaUWtNeUNnUG1kc001K2dMN0kydExzUHFYc2lCVFFIb2dwUXAzbTFkRzdPNkxtZlNvZ1JIcTNQa0hlU2YyYnZCCm9CcTRhc0VDZ1lFQWpSenBFVnphMEp1U2JKalVDY0FOWmkrTENtZ05zZHEzdnlTTWx3SVF5Uy9lZDdzd3FWM2kKTjBWckJwM1FucFpGd0VjckJDQnVHK3huUThJWHJYUVdpVjBES29IK1loR3lLVDdpbDVzZmNGbHNsWjV6UWFaYwpqOUIxSG0zOGduUXF2OUYxbjZybjAwRVpsWmZucWgxbkYrV1Zkb0lIcXF6VHNJdXR4Wk02aHNjPQotLS0tLUVORCBSU0EgUFJJVkFURSBLRVktLS0tLQo=
     service:
       name: nodedeployment-webhook-service
-      namespace: nd
+      namespace: nodedeployment-system
       path: /validate-edge-harmonycloud-cn-v1alpha1-nodedeployment
   failurePolicy: Fail
   name: vnodedeployment.kb.io

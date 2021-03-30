@@ -1,5 +1,5 @@
 domain: harmonycloud.cn
-repo: nodedeployment
+repo: github.com/ttlv/nodedeployment
 resources:
 - group: edge
   kind: NodeDeployment
