@@ -15,7 +15,7 @@ RUN go mod download
 COPY main.go main.go
 COPY api/ api/
 COPY controllers/ controllers/
-COPY util/ util/
+COPY utils/ utils/
 COPY constant constant/
 
 # Build
