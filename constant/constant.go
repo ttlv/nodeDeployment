@@ -14,7 +14,7 @@ const (
 )
 
 var (
-	IP             = "10.1.11.28"
+	IP             = "10.10.103.95"
 	Port           = 22
 	Password       = "123456"
 	UbuntuOSType   = "ubuntu"
