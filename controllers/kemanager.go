@@ -69,10 +69,9 @@ func doJoin(r *NodeDeploymentReconciler, req ctrl.Request, nd *edgev1alpha1.Node
 		message := "[stage: join], create ssh client via FRP failed"
 		r.Recorder.Event(nd, corev1.EventTypeWarning, "NetworkError", message)
 		return err
-	} else {
-		message := "[stage: join], create ssh client via FRP succeeded"
-		r.Recorder.Event(nd, corev1.EventTypeNormal, "NetworkNormal", message)
 	}
+	message := "[stage: join], create ssh client via FRP succeeded"
+	r.Recorder.Event(nd, corev1.EventTypeNormal, "NetworkNormal", message)
 
 	// 首先判断docker是否正常安装
 	if !existDocker(r, req, sshClient) {
