@@ -21,5 +21,5 @@ var (
 	RaspbianOSType = "raspbian"
 	DebianOSType   = "debian"
 	CentOSType     = "centos"
-	AtlasOsType    = "euler"
+	AtlasOsType    = "euleros"
 )
