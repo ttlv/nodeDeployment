@@ -369,7 +369,7 @@ func GetOSInterface(sshClient *ssh.Client) (string, error) {
 	switch OS {
 	case constant.UbuntuOSType, constant.RaspbianOSType, constant.DebianOSType:
 		return "ubuntu", nil //
-	case constant.CentOSType:
+	case constant.CentOSType, constant.AtlasOsType:
 		return "centos", nil //
 	default:
 		fmt.Printf("This OS version is currently un-supported by keadm, %s", OS)
