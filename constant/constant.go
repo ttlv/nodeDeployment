@@ -16,7 +16,7 @@ const (
 var (
 	IP             = "10.10.103.95"
 	Port           = 22
-	Password       = "123456"
+	Password       = "Harmony@123"
 	UbuntuOSType   = "ubuntu"
 	RaspbianOSType = "raspbian"
 	DebianOSType   = "debian"
